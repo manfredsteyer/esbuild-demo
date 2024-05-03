@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Host</title>
+</head>
+
+<body>
+    <h1>Look into your JavaScript console!</h1>
+
+    <script type="importmap">
+        {
+            "imports": {
+                "@my/remote": "./remote.js"
+            }
+        }
+    </script>
+
+    <script src="host.js" type="module"></script>
+
+</body>
+
+</html>
