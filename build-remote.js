@@ -11,5 +11,6 @@ esbuild
     minify: false,
     format: "esm",
     loader: { ".ts": "ts" },
+    write: true,
   })
-  .catch(() => process.exit(1));
+  .catch((err) => console.error(err));

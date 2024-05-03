@@ -1,4 +1,6 @@
 const esbuild = require("esbuild");
+const demoEsBuildPlugin = require("./demo-esbuild-plugin.js");
+const fs = require('fs');
 
 esbuild
   .build({
@@ -11,6 +13,24 @@ esbuild
     sourcemap: true,
     minify: false,
     format: "esm",
+    plugins: [demoEsBuildPlugin],
     loader: { ".ts": "ts" },
+
+    // Setting write to false gives us the possibility
+    // to manually write and perhaps transform the bundles,
+    // as in the then clause below
+    write: false
+  }).then(result => {
+
+    // Manually writing files
+    if (result.outputFiles) {
+      result.outputFiles.forEach(file => {
+        fs.mkdirSync(require('path').dirname(file.path), { recursive: true });
+        
+        // Add comment for demo purposes
+        fs.writeFileSync(file.path, '// Built with esbuild\n\n' + file.text);
+        console.log(`Wrote file: ${file.path}`);
+      });
+    }
   })
-  .catch(() => process.exit(1));
+  .catch((err) => console.error(err));

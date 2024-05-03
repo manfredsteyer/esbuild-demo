@@ -8,6 +8,8 @@ export function host() {
         console.log(msg);
     });
 
+    console.log('The host was build on __BUILD_DATE__')
+
     import('@my/remote').then(m => {
         const remote$ = m.remote();
         remote$.subscribe((msg: string) => {

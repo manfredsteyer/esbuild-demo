@@ -1,3 +1,4 @@
+// Built with esbuild
 // node_modules/tslib/tslib.es6.mjs
 var extendStatics = function(d, b) {
   extendStatics = Object.setPrototypeOf || { __proto__: [] } instanceof Array && function(d2, b2) {
@@ -1266,6 +1267,7 @@ function host() {
   host$.subscribe((msg) => {
     console.log(msg);
   });
+  console.log("The host was build on 2024-05-03T09:51:06.541Z");
   import("@my/remote").then((m) => {
     const remote$ = m.remote();
     remote$.subscribe((msg) => {
