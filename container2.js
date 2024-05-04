@@ -19,3 +19,4 @@ const createdContainer = createContainer({
 
 export const get = createdContainer.get
 export const init = createdContainer.init
+export const moduleMap = createdContainer.moduleMap // needs to be exposed from my runtime or plugin or use json remote

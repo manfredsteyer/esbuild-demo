@@ -79,7 +79,8 @@ export default ({exposes, name, remotes, shared}) => {
 // This exports getters to disallow modifications
       __webpack_require__.d(exports, {
         get: () => (get),
-        init: () => (init)
+        init: () => (init),
+        moduleMap: () => (moduleMap),
       });
 
       /***/
@@ -492,7 +493,6 @@ export default ({exposes, name, remotes, shared}) => {
   var __webpack_exports__ = __webpack_require__("webpack/container/entry/app2");
   var __webpack_exports__get = __webpack_exports__.get;
   var __webpack_exports__init = __webpack_exports__.init;
-
   return __webpack_exports__
 }
 

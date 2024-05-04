@@ -10,29 +10,48 @@ function encodeInlineESM(code) {
   return inlineESM;
 }
 
-const instantiatePatch = (federationOptions) => {
-
-  init(federationOptions);
-
-// Usage
+function createVirtualModule(name, ref) {
   const code = `
 // find this FederationHost instance. 
 // Each virtual module needs to know what FederationHost to connect to for loading modules
 const container = __FEDERATION__.__INSTANCES__.find(container=>{
-  return container.name === ${JSON.stringify(federationOptions.name)}
+  return container.name === ${JSON.stringify(name)}
 })
 // Federation Runtime takes care of script injection
-export default await container.loadRemote('@my/remote')
+export default await container.loadRemote(${JSON.stringify(ref)})
 `;
 
-  const inlineESM = encodeInlineESM(code);
+  return code;
+}
 
+const instantiatePatch = async (federationOptions) => {
   const importMap = {
     imports: {}
   }
 
-//@ts-ignore
-  importMap.imports['@my/remote'] = inlineESM;
+  // initalize federation
+  init(federationOptions);
+
+  federationOptions.remotes.forEach((remote) => {
+    importMap.imports[remote.alias || remote.name] = remote.entry
+  })
+
+  const remotes = await Promise.all(federationOptions.remotes.map(async (remote) => {
+   // extract expose maps from remotes
+    const container = await import(remote.entry)
+    return {...remote, moduleMap: container.moduleMap}
+  }))
+
+  remotes.forEach((remote) => {
+
+    Object.keys(remote.moduleMap).forEach(k => {
+      // build import maps for expose module maps
+      k = k.replace('.', remote.alias || remote.name)
+      importMap.imports[k] = encodeInlineESM(createVirtualModule(federationOptions.name, k))
+    })
+  })
+
+
 //@ts-ignore
   importShim.addImportMap(importMap);
 }

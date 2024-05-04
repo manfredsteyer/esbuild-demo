@@ -5695,10 +5695,10 @@ var createContainer_default = ({ exposes, name: name2, remotes: remotes2, shared
       \***********************/
       /***/
       (__unused_webpack_module, exports, __webpack_require__2) => {
-        var moduleMap = {};
+        var moduleMap2 = {};
         for (var key in exposes) {
           if (Object.prototype.hasOwnProperty.call(exposes, key)) {
-            moduleMap[key] = () => {
+            moduleMap2[key] = () => {
               return Promise.resolve(exposes[key]()).then((m) => {
                 return () => m;
               });
@@ -5707,7 +5707,7 @@ var createContainer_default = ({ exposes, name: name2, remotes: remotes2, shared
         }
         var get2 = (module, getScope) => {
           __webpack_require__2.R = getScope;
-          getScope = __webpack_require__2.o(moduleMap, module) ? moduleMap[module]() : Promise.resolve().then(() => {
+          getScope = __webpack_require__2.o(moduleMap2, module) ? moduleMap2[module]() : Promise.resolve().then(() => {
             throw new Error('Module "' + module + '" does not exist in container.');
           });
           __webpack_require__2.R = void 0;
@@ -5728,7 +5728,8 @@ var createContainer_default = ({ exposes, name: name2, remotes: remotes2, shared
         );
         __webpack_require__2.d(exports, {
           get: () => get2,
-          init: () => init3
+          init: () => init3,
+          moduleMap: () => moduleMap2
         });
       }
     )
@@ -6123,8 +6124,10 @@ var createdContainer = createContainer_default({
 });
 var get = createdContainer.get;
 var init2 = createdContainer.init;
+var moduleMap = createdContainer.moduleMap;
 export {
   get,
-  init2 as init
+  init2 as init,
+  moduleMap
 };
 //# sourceMappingURL=remote.js.map

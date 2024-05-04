@@ -5006,46 +5006,61 @@ function encodeInlineESM(code) {
   const inlineESM = `data:text/javascript;charset=utf-8,${encodedCode}`;
   return inlineESM;
 }
-var instantiatePatch = (federationOptions) => {
-  init(federationOptions);
+function createVirtualModule(name2, ref) {
   const code = `
 // find this FederationHost instance. 
 // Each virtual module needs to know what FederationHost to connect to for loading modules
 const container = __FEDERATION__.__INSTANCES__.find(container=>{
-  return container.name === ${JSON.stringify(federationOptions.name)}
+  return container.name === ${JSON.stringify(name2)}
 })
 // Federation Runtime takes care of script injection
-export default await container.loadRemote('@my/remote')
+export default await container.loadRemote(${JSON.stringify(ref)})
 `;
-  const inlineESM = encodeInlineESM(code);
+  return code;
+}
+var instantiatePatch = async (federationOptions) => {
   const importMap = {
     imports: {}
   };
-  importMap.imports["@my/remote"] = inlineESM;
+  init(federationOptions);
+  federationOptions.remotes.forEach((remote) => {
+    importMap.imports[remote.alias || remote.name] = remote.entry;
+  });
+  const remotes = await Promise.all(federationOptions.remotes.map(async (remote) => {
+    const container2 = await import(remote.entry);
+    return { ...remote, moduleMap: container2.moduleMap };
+  }));
+  remotes.forEach((remote) => {
+    Object.keys(remote.moduleMap).forEach((k) => {
+      k = k.replace(".", remote.alias || remote.name);
+      importMap.imports[k] = encodeInlineESM(createVirtualModule(federationOptions.name, k));
+    });
+  });
+  console.log(importMap);
   importShim.addImportMap(importMap);
 };
 var federation_default = instantiatePatch;
 
 // host.ts
-federation_default({
-  name: "host",
-  remotes: [
-    {
-      type: "esm",
-      name: "@my",
-      // mf-manifest.json is a file type generated in the new version of Module Federation build tools, providing richer functionality compared to remoteEntry
-      // Preloading depends on the use of the mf-manifest.json file type
-      entry: "http://localhost:3000/remote.js",
-      alias: "@my"
-    }
-  ]
-});
-function host() {
+async function host() {
+  await federation_default({
+    name: "host",
+    remotes: [
+      {
+        type: "esm",
+        name: "@my",
+        // mf-manifest.json is a file type generated in the new version of Module Federation build tools, providing richer functionality compared to remoteEntry
+        // Preloading depends on the use of the mf-manifest.json file type
+        entry: "http://localhost:3000/remote.js",
+        alias: "@my"
+      }
+    ]
+  });
   const host$ = of("Hello from the host!");
   host$.subscribe((msg) => {
     console.log(msg);
   });
-  console.log("The host was build on 2024-05-04T02:28:27.003Z");
+  console.log("The host was build on 2024-05-04T02:52:37.699Z");
   import("@my/remote").then((m) => {
     m = m.default;
     console.log("from native import", m);
