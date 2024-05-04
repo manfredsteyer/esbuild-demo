@@ -189,23 +189,6 @@ export default async (federationOptions) => {
   /* webpack/runtime/ensure chunk */
   (() => {
     __webpack_require__.f = {};
-    // This file contains only the entry chunk.
-    // The chunk loading function for additional chunks
-    __webpack_require__.e = (chunkId) => {
-      return Promise.all(Object.keys(__webpack_require__.f).reduce((promises, key) => {
-        __webpack_require__.f[key](chunkId, promises);
-        return promises;
-      }, []));
-    };
-  })();
-
-  /* webpack/runtime/get javascript chunk filename */
-  (() => {
-    // This function allow to reference async chunks
-    __webpack_require__.u = (chunkId) => {
-      // return url for filenames based on template
-      return "" + chunkId + ".mjs";
-    };
   })();
 
   /* webpack/runtime/global */
@@ -236,15 +219,6 @@ export default async (federationOptions) => {
     };
   })();
 
-  /* webpack/runtime/node module decorator */
-  (() => {
-    __webpack_require__.nmd = (module) => {
-      module.paths = [];
-      if (!module.children) module.children = [];
-      return module;
-    };
-  })();
-
   /* webpack/runtime/remotes loading */
   (() => {
     var chunkMapping = {};
@@ -270,7 +244,6 @@ export default async (federationOptions) => {
 
   /* webpack/runtime/sharing */
   (() => {
-
     __webpack_require__.federation.initOptions.shared = shared
     __webpack_require__.S = {};
     var initPromises = {};
@@ -286,75 +259,6 @@ export default async (federationOptions) => {
     };
   })();
 
-  /* webpack/runtime/consumes */
-  (() => {
-    var installedModules = {};
-    var moduleToHandlerMapping = {
-      "void": {
-        getter: () => (__webpack_require__.e("vendors-node_modules_pnpm_react_16_14_0_node_modules_react_index_js").then(() => (() => (__webpack_require__(/*! react */ "../../../node_modules/.pnpm/react@16.14.0/node_modules/react/index.js"))))),
-        shareInfo: {
-          shareConfig: {
-            "fixedDependencies": false,
-            "requiredVersion": "^16.14.0",
-            "strictVersion": false,
-            "singleton": true,
-            "eager": false
-          },
-          scope: ["default"],
-        },
-        shareKey: "void",
-      },
-    };
-    // no consumes in initial chunks
-    var chunkMapping = {
-      "void": [
-        "void"
-      ],
-    };
-    __webpack_require__.f.consumes = (chunkId, promises) => {
-      __webpack_require__.federation.bundlerRuntime.consumes({
-        chunkMapping: chunkMapping,
-        installedModules: installedModules,
-        chunkId: chunkId,
-        moduleToHandlerMapping: moduleToHandlerMapping,
-        promises: promises,
-        webpackRequire: __webpack_require__
-      });
-    }
-  })();
-
-  /* webpack/runtime/import chunk loading */
-  (() => {
-    // no baseURI
-
-    // object to store loaded and loading chunks
-    // undefined = chunk not loaded, null = chunk preloaded/prefetched
-    // [resolve, Promise] = chunk loading, 0 = chunk loaded
-    var installedChunks = {
-      [name]: 0
-    };
-
-    var installChunk = (data) => {
-      var {ids, modules, runtime} = data;
-      // add "modules" to the modules object,
-      // then flag all "ids" as loaded and fire callback
-      var moduleId, chunkId, i = 0;
-      for (moduleId in modules) {
-        if (__webpack_require__.o(modules, moduleId)) {
-          __webpack_require__.m[moduleId] = modules[moduleId];
-        }
-      }
-      if (runtime) runtime(__webpack_require__);
-      for (; i < ids.length; i++) {
-        chunkId = ids[i];
-        if (__webpack_require__.o(installedChunks, chunkId) && installedChunks[chunkId]) {
-          installedChunks[chunkId][0]();
-        }
-        installedChunks[ids[i]] = 0;
-      }
-
-    }
-  })();
 
   /************************************************************************/
 

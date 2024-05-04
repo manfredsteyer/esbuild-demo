@@ -5845,7 +5845,7 @@ var createContainer_default = async (federationOptions) => {
           }))
         },
         chunkMatcher: function(chunkId) {
-          return !/^webpack_sharing_consume_default_(|lodash_lodash\-webpack_sharing_consume_default_)react_react$/.test(chunkId);
+          return true;
         },
         rootOutputDir: "",
         initialConsumes: void 0,
@@ -5871,17 +5871,6 @@ var createContainer_default = async (federationOptions) => {
   })();
   (() => {
     __webpack_require__.f = {};
-    __webpack_require__.e = (chunkId) => {
-      return Promise.all(Object.keys(__webpack_require__.f).reduce((promises, key) => {
-        __webpack_require__.f[key](chunkId, promises);
-        return promises;
-      }, []));
-    };
-  })();
-  (() => {
-    __webpack_require__.u = (chunkId) => {
-      return "" + chunkId + ".mjs";
-    };
   })();
   (() => {
     __webpack_require__.g = function() {
@@ -5904,14 +5893,6 @@ var createContainer_default = async (federationOptions) => {
         Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
       }
       Object.defineProperty(exports, "__esModule", { value: true });
-    };
-  })();
-  (() => {
-    __webpack_require__.nmd = (module) => {
-      module.paths = [];
-      if (!module.children)
-        module.children = [];
-      return module;
     };
   })();
   (() => {
@@ -5948,124 +5929,6 @@ var createContainer_default = async (federationOptions) => {
         initTokens,
         initScope
       });
-    };
-  })();
-  (() => {
-    var installedModules = {};
-    var moduleToHandlerMapping = {
-      "webpack/sharing/consume/default/react/react?9c7e": {
-        getter: () => __webpack_require__.e("vendors-node_modules_pnpm_react_16_14_0_node_modules_react_index_js").then(() => () => __webpack_require__(
-          /*! react */
-          "../../../node_modules/.pnpm/react@16.14.0/node_modules/react/index.js"
-        )),
-        shareInfo: {
-          shareConfig: {
-            "fixedDependencies": false,
-            "requiredVersion": "^16.14.0",
-            "strictVersion": false,
-            "singleton": true,
-            "eager": false
-          },
-          scope: ["default"]
-        },
-        shareKey: "react"
-      },
-      "webpack/sharing/consume/default/react/react?eb04": {
-        getter: () => Promise.all([__webpack_require__.e("vendors-node_modules_pnpm_react_16_14_0_node_modules_react_index_js"), __webpack_require__.e("node_modules_pnpm_object-assign_4_1_1_node_modules_object-assign_index_js-node_modules_pnpm_p-178302")]).then(() => () => __webpack_require__(
-          /*! react */
-          "../../../node_modules/.pnpm/react@16.14.0/node_modules/react/index.js"
-        )),
-        shareInfo: {
-          shareConfig: {
-            "fixedDependencies": false,
-            "requiredVersion": "^16.13.0",
-            "strictVersion": false,
-            "singleton": true,
-            "eager": false
-          },
-          scope: ["default"]
-        },
-        shareKey: "react"
-      },
-      "webpack/sharing/consume/default/lodash/lodash": {
-        getter: () => __webpack_require__.e("vendors-node_modules_pnpm_lodash_3_10_1_node_modules_lodash_index_js").then(() => () => __webpack_require__(
-          /*! lodash */
-          "../../../node_modules/.pnpm/lodash@3.10.1/node_modules/lodash/index.js"
-        )),
-        shareInfo: {
-          shareConfig: {
-            "fixedDependencies": false,
-            "requiredVersion": "^3.10.1",
-            "strictVersion": true,
-            "singleton": false,
-            "eager": false
-          },
-          scope: ["default"]
-        },
-        shareKey: "lodash"
-      }
-    };
-    var chunkMapping = {
-      "webpack_sharing_consume_default_react_react": [
-        "webpack/sharing/consume/default/react/react?9c7e"
-      ],
-      "webpack_sharing_consume_default_lodash_lodash-webpack_sharing_consume_default_react_react": [
-        "webpack/sharing/consume/default/react/react?eb04",
-        "webpack/sharing/consume/default/lodash/lodash"
-      ]
-    };
-    __webpack_require__.f.consumes = (chunkId, promises) => {
-      __webpack_require__.federation.bundlerRuntime.consumes({
-        chunkMapping,
-        installedModules,
-        chunkId,
-        moduleToHandlerMapping,
-        promises,
-        webpackRequire: __webpack_require__
-      });
-    };
-  })();
-  (() => {
-    var installedChunks = {
-      "app2": 0
-    };
-    var installChunk = (data2) => {
-      var { ids, modules, runtime } = data2;
-      var moduleId, chunkId, i = 0;
-      for (moduleId in modules) {
-        if (__webpack_require__.o(modules, moduleId)) {
-          __webpack_require__.m[moduleId] = modules[moduleId];
-        }
-      }
-      if (runtime)
-        runtime(__webpack_require__);
-      for (; i < ids.length; i++) {
-        chunkId = ids[i];
-        if (__webpack_require__.o(installedChunks, chunkId) && installedChunks[chunkId]) {
-          installedChunks[chunkId][0]();
-        }
-        installedChunks[ids[i]] = 0;
-      }
-    };
-    __webpack_require__.f.j = (chunkId, promises) => {
-      var installedChunkData = __webpack_require__.o(installedChunks, chunkId) ? installedChunks[chunkId] : void 0;
-      if (installedChunkData !== 0) {
-        if (installedChunkData) {
-          promises.push(installedChunkData[1]);
-        } else {
-          if (!/^webpack_sharing_consume_default_(|lodash_lodash\-webpack_sharing_consume_default_)react_react$/.test(chunkId)) {
-            const importFactory = (path2) => import(path2);
-            var promise = importFactory("./" + __webpack_require__.u(chunkId)).then(installChunk, (e) => {
-              if (installedChunks[chunkId] !== 0)
-                installedChunks[chunkId] = void 0;
-              throw e;
-            });
-            var promise = Promise.race([promise, new Promise((resolve) => installedChunkData = installedChunks[chunkId] = [resolve])]);
-            promises.push(installedChunkData[1] = promise);
-          } else
-            installedChunks[chunkId] = 0;
-        }
-      }
     };
   })();
   var __webpack_exports__ = __webpack_require__("webpack/container/entry/app2");
