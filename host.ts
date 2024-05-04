@@ -1,4 +1,4 @@
-import { of } from "rxjs";
+import {of} from 'rxjs'
 import federation from './federation.js';
 
 
@@ -17,7 +17,23 @@ export async function host() {
                 alias: "@my"
             },
         ],
+        shared: {
+            react: {
+                version: '7.8.1',
+                scope: 'default',
+                get: async () => await import('https://esm.sh/react'),
+                shareConfig: {
+                    singleton: true,
+                    requiredVersion: '^7.8.1',
+                },
+            },
+        },
     })
+
+    import('react').then((r)=>{
+        console.log('shared react', r);
+    })
+
     const host$ = of('Hello from the host!');
 
     host$.subscribe((msg: string) => {

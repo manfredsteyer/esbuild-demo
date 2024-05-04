@@ -5018,6 +5018,20 @@ export default await container.loadRemote(${JSON.stringify(ref)})
 `;
   return code;
 }
+function createVirtualModuleShare(name2, ref) {
+  console.log("name", name2);
+  const code = `
+// find this FederationHost instance. 
+// Each virtual module needs to know what FederationHost to connect to for loading modules
+const container = __FEDERATION__.__INSTANCES__.find(container=>{
+  return container.name === ${JSON.stringify(name2)}
+})
+console.log('container', container);
+// Federation Runtime takes care of script injection
+export default await container.loadShare(${JSON.stringify(ref)})
+`;
+  return code;
+}
 var instantiatePatch = async (federationOptions) => {
   const importMap = {
     imports: {}
@@ -5036,7 +5050,9 @@ var instantiatePatch = async (federationOptions) => {
       importMap.imports[k] = encodeInlineESM(createVirtualModule(federationOptions.name, k));
     });
   });
-  console.log(importMap);
+  Object.keys(federationOptions.shared).forEach((share) => {
+    importMap.imports[share] = encodeInlineESM(createVirtualModuleShare(federationOptions.name, share));
+  });
   importShim.addImportMap(importMap);
 };
 var federation_default = instantiatePatch;
@@ -5054,13 +5070,27 @@ async function host() {
         entry: "http://localhost:3000/remote.js",
         alias: "@my"
       }
-    ]
+    ],
+    shared: {
+      react: {
+        version: "7.8.1",
+        scope: "default",
+        get: async () => await import("https://esm.sh/react"),
+        shareConfig: {
+          singleton: true,
+          requiredVersion: "^7.8.1"
+        }
+      }
+    }
+  });
+  import("react").then((r) => {
+    console.log("shared react", r);
   });
   const host$ = of("Hello from the host!");
   host$.subscribe((msg) => {
     console.log(msg);
   });
-  console.log("The host was build on 2024-05-04T02:52:37.699Z");
+  console.log("The host was build on 2024-05-04T03:21:33.232Z");
   import("@my/remote").then((m) => {
     m = m.default;
     console.log("from native import", m);

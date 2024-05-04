@@ -15,6 +15,17 @@ const createdContainer = createContainer({
       alias: "other"
     },
   ],
+  shared: {
+    react: {
+      version: '18.0.0',
+      scope: 'default',
+      get: async () => await import('https://esm.sh/react'),
+      shareConfig: {
+        singleton: true,
+        requiredVersion: '^18.0.0',
+      },
+    },
+  },
 })
 
 export const get = createdContainer.get

@@ -311,9 +311,10 @@ export default ({exposes, name, remotes, shared}) => {
       var promises = [];
       switch (name) {
         case "default": {
-          register("lodash", "3.10.1", () => (__webpack_require__.e("vendors-node_modules_pnpm_lodash_3_10_1_node_modules_lodash_index_js").then(() => (() => (__webpack_require__(/*! ../../../node_modules/.pnpm/lodash@3.10.1/node_modules/lodash/index.js */ "../../../node_modules/.pnpm/lodash@3.10.1/node_modules/lodash/index.js"))))));
-          register("react-dom", "16.14.0", () => (Promise.all([__webpack_require__.e("vendors-node_modules_pnpm_react-dom_16_14_0_react_16_14_0_node_modules_react-dom_index_js"), __webpack_require__.e("webpack_sharing_consume_default_react_react")]).then(() => (() => (__webpack_require__(/*! ../../../node_modules/.pnpm/react-dom@16.14.0_react@16.14.0/node_modules/react-dom/index.js */ "../../../node_modules/.pnpm/react-dom@16.14.0_react@16.14.0/node_modules/react-dom/index.js"))))));
-          register("react", "16.14.0", () => (Promise.all([__webpack_require__.e("vendors-node_modules_pnpm_react_16_14_0_node_modules_react_index_js"), __webpack_require__.e("node_modules_pnpm_object-assign_4_1_1_node_modules_object-assign_index_js-node_modules_pnpm_p-178302")]).then(() => (() => (__webpack_require__(/*! ../../../node_modules/.pnpm/react@16.14.0/node_modules/react/index.js */ "../../../node_modules/.pnpm/react@16.14.0/node_modules/react/index.js"))))));
+          // share not connected yet
+          // register("lodash", "3.10.1", () => (__webpack_require__.e("vendors-node_modules_pnpm_lodash_3_10_1_node_modules_lodash_index_js").then(() => (() => (__webpack_require__(/*! ../../../node_modules/.pnpm/lodash@3.10.1/node_modules/lodash/index.js */ "../../../node_modules/.pnpm/lodash@3.10.1/node_modules/lodash/index.js"))))));
+          // register("react-dom", "16.14.0", () => (Promise.all([__webpack_require__.e("vendors-node_modules_pnpm_react-dom_16_14_0_react_16_14_0_node_modules_react-dom_index_js"), __webpack_require__.e("webpack_sharing_consume_default_react_react")]).then(() => (() => (__webpack_require__(/*! ../../../node_modules/.pnpm/react-dom@16.14.0_react@16.14.0/node_modules/react-dom/index.js */ "../../../node_modules/.pnpm/react-dom@16.14.0_react@16.14.0/node_modules/react-dom/index.js"))))));
+          // register("react", "16.14.0", () => (Promise.all([__webpack_require__.e("vendors-node_modules_pnpm_react_16_14_0_node_modules_react_index_js"), __webpack_require__.e("node_modules_pnpm_object-assign_4_1_1_node_modules_object-assign_index_js-node_modules_pnpm_p-178302")]).then(() => (() => (__webpack_require__(/*! ../../../node_modules/.pnpm/react@16.14.0/node_modules/react/index.js */ "../../../node_modules/.pnpm/react@16.14.0/node_modules/react/index.js"))))));
         }
           break;
       }
@@ -324,24 +325,9 @@ export default ({exposes, name, remotes, shared}) => {
 
   /* webpack/runtime/sharing */
   (() => {
-    __webpack_require__.federation.initOptions.shared = {
-      "lodash": [{
-        version: "3.10.1",
-        get: () => (__webpack_require__.e("vendors-node_modules_pnpm_lodash_3_10_1_node_modules_lodash_index_js").then(() => (() => (__webpack_require__(/*! ../../../node_modules/.pnpm/lodash@3.10.1/node_modules/lodash/index.js */ "../../../node_modules/.pnpm/lodash@3.10.1/node_modules/lodash/index.js"))))),
-        scope: ["default"],
-        shareConfig: {"eager": false, "requiredVersion": false, "strictVersion": false, "singleton": false}
-      },], "react-dom": [{
-        version: "16.14.0",
-        get: () => (Promise.all([__webpack_require__.e("vendors-node_modules_pnpm_react-dom_16_14_0_react_16_14_0_node_modules_react-dom_index_js"), __webpack_require__.e("webpack_sharing_consume_default_react_react")]).then(() => (() => (__webpack_require__(/*! ../../../node_modules/.pnpm/react-dom@16.14.0_react@16.14.0/node_modules/react-dom/index.js */ "../../../node_modules/.pnpm/react-dom@16.14.0_react@16.14.0/node_modules/react-dom/index.js"))))),
-        scope: ["default"],
-        shareConfig: {"eager": false, "requiredVersion": false, "strictVersion": false, "singleton": true}
-      },], "react": [{
-        version: "16.14.0",
-        get: () => (Promise.all([__webpack_require__.e("vendors-node_modules_pnpm_react_16_14_0_node_modules_react_index_js"), __webpack_require__.e("node_modules_pnpm_object-assign_4_1_1_node_modules_object-assign_index_js-node_modules_pnpm_p-178302")]).then(() => (() => (__webpack_require__(/*! ../../../node_modules/.pnpm/react@16.14.0/node_modules/react/index.js */ "../../../node_modules/.pnpm/react@16.14.0/node_modules/react/index.js"))))),
-        scope: ["default"],
-        shareConfig: {"eager": false, "requiredVersion": false, "strictVersion": false, "singleton": true}
-      },],
-    }
+
+    console.log('shared', shared)
+    __webpack_require__.federation.initOptions.shared = shared
     __webpack_require__.S = {};
     var initPromises = {};
     var initTokens = {};

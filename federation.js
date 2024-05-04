@@ -24,6 +24,21 @@ export default await container.loadRemote(${JSON.stringify(ref)})
   return code;
 }
 
+function createVirtualModuleShare(name, ref) {
+  console.log('name', name);
+  const code = `
+// find this FederationHost instance. 
+// Each virtual module needs to know what FederationHost to connect to for loading modules
+const container = __FEDERATION__.__INSTANCES__.find(container=>{
+  return container.name === ${JSON.stringify(name)}
+})
+console.log('container', container);
+// Federation Runtime takes care of script injection
+export default await container.loadShare(${JSON.stringify(ref)})
+`;
+
+  return code;
+}
 const instantiatePatch = async (federationOptions) => {
   const importMap = {
     imports: {}
@@ -49,6 +64,10 @@ const instantiatePatch = async (federationOptions) => {
       k = k.replace('.', remote.alias || remote.name)
       importMap.imports[k] = encodeInlineESM(createVirtualModule(federationOptions.name, k))
     })
+  })
+
+  Object.keys(federationOptions.shared).forEach(share => {
+    importMap.imports[share] = encodeInlineESM(createVirtualModuleShare(federationOptions.name, share))
   })
 
 
