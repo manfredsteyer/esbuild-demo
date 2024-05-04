@@ -5019,36 +5019,30 @@ init({
     }
   ]
 });
-var originalImport = (path2) => import(path2);
-globalThis.import = async function(url2) {
-  try {
-    return await loadRemote(url2);
-  } catch (e) {
-  }
-  console.log("Custom import function called with URL:", url2);
-  return originalImport(url2);
-};
 function host() {
   const host$ = of("Hello from the host!");
   host$.subscribe((msg) => {
     console.log(msg);
   });
-  console.log("The host was build on __BUILD_DATE__");
+  console.log("The host was build on 2024-05-04T01:53:12.432Z");
   loadRemote("@my/remote").then((m) => {
     const remote$ = m.remote();
     remote$.subscribe((msg) => {
       console.log(msg);
     });
   });
-  globalThis.import("@my/remote").then((m) => {
+  import("@my/remote").then((m) => {
+    m = m.default;
+    console.log("from native import", m);
     const remote$ = m.remote();
     remote$.subscribe((msg) => {
       console.log(msg);
     });
   });
 }
-host();
+var host_default = host();
 export {
+  host_default as default,
   host
 };
 //# sourceMappingURL=host.js.map

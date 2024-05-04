@@ -6,10 +6,8 @@ module.exports = demoEsBuildPlugin = {
   setup(build) {
     build.onLoad({ filter: /\.ts$/ }, async (args) => {
       const contents = await require('fs').promises.readFile(args.path, 'utf8');
-      let modified = contents.replace(/(?<!pure)import\(/g, 'globalThis.import(');
-       modified = modified.replace(/pureimport\(/g, 'import(');
+      const modified = contents.replace(/__BUILD_DATE__/g, new Date().toISOString());
 
-      console.log(modified)
       return {
         contents: modified,
         loader: 'ts'

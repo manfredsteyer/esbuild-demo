@@ -5,10 +5,10 @@ const fs = require('fs');
 
 esbuild
   .build({
-    entryPoints: ["host.ts"],
+    entryPoints: ["shim.js"],
     external: ["@my/remote","@my/utils"],
     bundle: true,
-    outfile: "dist/host.js",
+    outfile: "dist/shim.js",
     platform: "browser",
     target: "es2020",
     sourcemap: true,

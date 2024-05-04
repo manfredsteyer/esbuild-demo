@@ -1,6 +1,7 @@
 import { of } from "rxjs";
 import {init,loadRemote} from "@module-federation/runtime";
-
+// import thing from '@my/utils'
+// console.log(thing)
 init({
     name: 'host',
     remotes: [
@@ -15,21 +16,6 @@ init({
     ],
 });
 //@ts-ignore
-const originalImport = (path)=>pureimport(path)
-
-//@ts-ignore
-globalThis.import = async function(url) {
-    try {
-       return await loadRemote(url)
-    } catch(e) {
-
-    }
-    console.log('Custom import function called with URL:', url);
-    // Implement your custom logic here
-    // For example, you can call the original import function with some modifications
-    return originalImport(url);
-};
-
 export function host() {
 
     const host$ = of('Hello from the host!');
@@ -37,7 +23,6 @@ export function host() {
     host$.subscribe((msg: string) => {
         console.log(msg);
     });
-
     console.log('The host was build on __BUILD_DATE__')
     loadRemote('@my/remote').then((m)=>{
         const remote$ = m.remote();
@@ -45,7 +30,11 @@ export function host() {
             console.log(msg);
         });
     })
+    // console.log('utils',import('@my/utils'));
     import('@my/remote').then(m => {
+        //@ts-ignore
+        m = m.default
+        console.log('from native import', m);
         const remote$ = m.remote();
         remote$.subscribe((msg: string) => {
             console.log(msg);
@@ -54,4 +43,4 @@ export function host() {
 
 }
 
-host();
+export default host();

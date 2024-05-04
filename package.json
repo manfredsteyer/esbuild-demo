@@ -6,7 +6,8 @@
   "scripts": {
     "build:remote": "node build-remote.js",
     "build:host": "node build-host.js",
-    "build": "npm run build:host && npm run build:remote",
+    "build:shim": "node build-shim.js",
+    "build": "npm run build:shim && npm run build:host && npm run build:remote",
     "start": "serve dist",
     "dev": "npm run build && npm run start"
   },
