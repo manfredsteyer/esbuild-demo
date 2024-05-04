@@ -7,10 +7,12 @@ function encodeInlineESM(code2) {
   return inlineESM2;
 }
 var code = `
-import * as container from '@my'
-const requestedModule = await container.get('./remote');
- 
-export default requestedModule()
+import "@my";
+const container = __FEDERATION__.__INSTANCES__.find(container=>{
+  return container.name === 'host'
+})
+
+export default await container.loadRemote('@my/remote')
 `;
 var inlineESM = encodeInlineESM(code);
 var importMap = {

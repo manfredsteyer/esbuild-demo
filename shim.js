@@ -10,10 +10,12 @@ function encodeInlineESM(code) {
 
 // Usage
 const code = `
-import * as container from '@my'
-const requestedModule = await container.get('./remote');
- 
-export default requestedModule()
+import "@my";
+const container = __FEDERATION__.__INSTANCES__.find(container=>{
+  return container.name === 'host'
+})
+
+export default await container.loadRemote('@my/remote')
 `;
 
 const inlineESM = encodeInlineESM(code);
