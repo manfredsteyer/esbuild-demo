@@ -153,7 +153,7 @@ export default async (federationOptions) => {
           }))
         },
         chunkMatcher: function (chunkId) {
-          return !/^webpack_sharing_consume_default_(|lodash_lodash\-webpack_sharing_consume_default_)react_react$/.test(chunkId)
+          return true
         },
         rootOutputDir: "",
         initialConsumes: undefined,
@@ -290,7 +290,7 @@ export default async (federationOptions) => {
   (() => {
     var installedModules = {};
     var moduleToHandlerMapping = {
-      "webpack/sharing/consume/default/react/react?9c7e": {
+      "void": {
         getter: () => (__webpack_require__.e("vendors-node_modules_pnpm_react_16_14_0_node_modules_react_index_js").then(() => (() => (__webpack_require__(/*! react */ "../../../node_modules/.pnpm/react@16.14.0/node_modules/react/index.js"))))),
         shareInfo: {
           shareConfig: {
@@ -302,46 +302,14 @@ export default async (federationOptions) => {
           },
           scope: ["default"],
         },
-        shareKey: "react",
+        shareKey: "void",
       },
-      "webpack/sharing/consume/default/react/react?eb04": {
-        getter: () => (Promise.all([__webpack_require__.e("vendors-node_modules_pnpm_react_16_14_0_node_modules_react_index_js"), __webpack_require__.e("node_modules_pnpm_object-assign_4_1_1_node_modules_object-assign_index_js-node_modules_pnpm_p-178302")]).then(() => (() => (__webpack_require__(/*! react */ "../../../node_modules/.pnpm/react@16.14.0/node_modules/react/index.js"))))),
-        shareInfo: {
-          shareConfig: {
-            "fixedDependencies": false,
-            "requiredVersion": "^16.13.0",
-            "strictVersion": false,
-            "singleton": true,
-            "eager": false
-          },
-          scope: ["default"],
-        },
-        shareKey: "react",
-      },
-      "webpack/sharing/consume/default/lodash/lodash": {
-        getter: () => (__webpack_require__.e("vendors-node_modules_pnpm_lodash_3_10_1_node_modules_lodash_index_js").then(() => (() => (__webpack_require__(/*! lodash */ "../../../node_modules/.pnpm/lodash@3.10.1/node_modules/lodash/index.js"))))),
-        shareInfo: {
-          shareConfig: {
-            "fixedDependencies": false,
-            "requiredVersion": "^3.10.1",
-            "strictVersion": true,
-            "singleton": false,
-            "eager": false
-          },
-          scope: ["default"],
-        },
-        shareKey: "lodash",
-      }
     };
     // no consumes in initial chunks
     var chunkMapping = {
-      "webpack_sharing_consume_default_react_react": [
-        "webpack/sharing/consume/default/react/react?9c7e"
+      "void": [
+        "void"
       ],
-      "webpack_sharing_consume_default_lodash_lodash-webpack_sharing_consume_default_react_react": [
-        "webpack/sharing/consume/default/react/react?eb04",
-        "webpack/sharing/consume/default/lodash/lodash"
-      ]
     };
     __webpack_require__.f.consumes = (chunkId, promises) => {
       __webpack_require__.federation.bundlerRuntime.consumes({
@@ -363,7 +331,7 @@ export default async (federationOptions) => {
     // undefined = chunk not loaded, null = chunk preloaded/prefetched
     // [resolve, Promise] = chunk loading, 0 = chunk loaded
     var installedChunks = {
-      "app2": 0
+      [name]: 0
     };
 
     var installChunk = (data) => {
@@ -386,33 +354,6 @@ export default async (federationOptions) => {
       }
 
     }
-
-    __webpack_require__.f.j = (chunkId, promises) => {
-      // import() chunk loading for javascript
-      var installedChunkData = __webpack_require__.o(installedChunks, chunkId) ? installedChunks[chunkId] : undefined;
-      if (installedChunkData !== 0) { // 0 means "already installed".
-
-        // a Promise means "currently loading".
-        if (installedChunkData) {
-          promises.push(installedChunkData[1]);
-        } else {
-          if (!/^webpack_sharing_consume_default_(|lodash_lodash\-webpack_sharing_consume_default_)react_react$/.test(chunkId)) {
-            const importFactory = (path) => import(path)
-            // setup Promise in chunk cache
-            var promise = importFactory("./" + __webpack_require__.u(chunkId)).then(installChunk, (e) => {
-              if (installedChunks[chunkId] !== 0) installedChunks[chunkId] = undefined;
-              throw e;
-            });
-            var promise = Promise.race([promise, new Promise((resolve) => (installedChunkData = installedChunks[chunkId] = [resolve]))])
-            promises.push(installedChunkData[1] = promise);
-          } else installedChunks[chunkId] = 0;
-        }
-      }
-    };
-
-    // no external install chunk
-
-    // no on chunks loaded
   })();
 
   /************************************************************************/
