@@ -1,4 +1,3 @@
-import {of} from 'rxjs'
 import federation from './federation.js';
 
 //@ts-ignore
@@ -16,12 +15,24 @@ export async function host() {
             },
         ],
         shared: {
+            rxjs: {
+                version: '7.8.1',
+                scope: 'default',
+                get: async () => {
+                    console.log('LOADING HOST SHARED RXJS');
+                    return await import('rxjs')
+                },
+                shareConfig: {
+                    singleton: true,
+                    requiredVersion: '^7.8.1',
+                },
+            },
             react: {
                 version: '7.8.1',
                 scope: 'default',
                 get: async () => {
-                    console.log('LOADING HOST SHARED MODULE');
-                    return await import('https://esm.sh/react')
+                    console.log('LOADING HOST SHARED REACT');
+                    return await import('react')
                 },
                 shareConfig: {
                     singleton: true,
@@ -30,16 +41,17 @@ export async function host() {
             },
         },
     })
-
+    // const {of} = await import('rxjs');
+console.log(import('rxjs'));
     import('react').then((r)=>{
         console.log('shared react', r);
     })
 
-    const host$ = of('Hello from the host!');
+    // const host$ = of('Hello from the host!');
 
-    host$.subscribe((msg: string) => {
-        console.log(msg);
-    });
+    // host$.subscribe((msg: string) => {
+    //     console.log(msg);
+    // });
     console.log('The host was build on __BUILD_DATE__')
     import('@my/remote').then(m => {
         //@ts-ignore

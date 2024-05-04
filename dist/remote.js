@@ -5716,6 +5716,7 @@ var instantiatePatch = async (federationOptions, skipInit) => {
       if (oimp.imports[share])
         return;
       importMap.imports[share] = encodeInlineESM(createVirtualModuleShare(federationOptions.name, share));
+      console.log(importMap.imports[share], share);
     });
   }
   importShim.addImportMap(importMap);
