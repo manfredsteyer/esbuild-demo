@@ -11,7 +11,7 @@ const createdContainer = createContainer({
       name: "other",
       // mf-manifest.json is a file type generated in the new version of Module Federation build tools, providing richer functionality compared to remoteEntry
       // Preloading depends on the use of the mf-manifest.json file type
-      entry: "http://localhost:3003/remote.js",
+      entry: "http://localhost:3000/remote2.js",
       alias: "other"
     },
   ],
@@ -28,6 +28,6 @@ const createdContainer = createContainer({
   },
 })
 
-export const get = createdContainer.get
-export const init = createdContainer.init
-export const moduleMap = createdContainer.moduleMap // needs to be exposed from my runtime or plugin or use json remote
+export const get = async (a,b)=> (await createdContainer).get(a,b)
+export const init = async (a,b) => (await createdContainer).init(a,b)
+export const moduleMap = async ()=> (await createdContainer).moduleMap // needs to be exposed from my runtime or plugin or use json remote

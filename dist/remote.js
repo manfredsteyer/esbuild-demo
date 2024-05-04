@@ -5657,8 +5657,75 @@ var federation = {
   bundlerRuntimeOptions: {}
 };
 
+// federation.js
+function encodeInlineESM(code) {
+  const encodedCode = encodeURIComponent(code);
+  const inlineESM = `data:text/javascript;charset=utf-8,${encodedCode}`;
+  return inlineESM;
+}
+function createVirtualModule(name2, ref) {
+  const code = `
+// find this FederationHost instance. 
+// Each virtual module needs to know what FederationHost to connect to for loading modules
+const container = __FEDERATION__.__INSTANCES__.find(container=>{
+  return container.name === ${JSON.stringify(name2)}
+})
+// Federation Runtime takes care of script injection
+export default await container.loadRemote(${JSON.stringify(ref)})
+`;
+  return code;
+}
+function createVirtualModuleShare(name2, ref) {
+  const code = `
+// find this FederationHost instance. 
+// Each virtual module needs to know what FederationHost to connect to for loading modules
+const container = __FEDERATION__.__INSTANCES__.find(container=>{
+  return container.name === ${JSON.stringify(name2)}
+})
+// Federation Runtime takes care of script injection
+export default await container.loadShare(${JSON.stringify(ref)})
+`;
+  return code;
+}
+var instantiatePatch = async (federationOptions, skipInit) => {
+  const importMap = {
+    imports: {}
+  };
+  if (!skipInit) {
+    init(federationOptions);
+  }
+  if (federationOptions.remotes) {
+    federationOptions.remotes.forEach((remote2) => {
+      importMap.imports[remote2.alias || remote2.name] = remote2.entry;
+    });
+    const remotes2 = await Promise.all(federationOptions.remotes.map(async (remote2) => {
+      const container2 = await import(remote2.entry);
+      const moduleMap2 = await container2.moduleMap();
+      return { ...remote2, moduleMap: moduleMap2 };
+    }));
+    remotes2.forEach((remote2) => {
+      Object.keys(remote2.moduleMap).forEach((k) => {
+        k = k.replace(".", remote2.alias || remote2.name);
+        importMap.imports[k] = encodeInlineESM(createVirtualModule(federationOptions.name, k));
+      });
+    });
+  }
+  if (federationOptions.shared) {
+    const oimp = importShim.getImportMap();
+    Object.keys(federationOptions.shared).forEach((share) => {
+      if (oimp.imports[share])
+        return;
+      importMap.imports[share] = encodeInlineESM(createVirtualModuleShare(federationOptions.name, share));
+    });
+  }
+  importShim.addImportMap(importMap);
+};
+var federation_default = instantiatePatch;
+
 // createContainer.js
-var createContainer_default = ({ exposes, name: name2, remotes: remotes2, shared }) => {
+var createContainer_default = async (federationOptions) => {
+  await federation_default(federationOptions, true);
+  const { exposes, name: name2, remotes: remotes2 = [], shared, plugins } = federationOptions;
   var __webpack_modules__ = {
     /***/
     "./node_modules/.federation/entry.1f2288102e035e2ed66b2efaf60ad043.js": (
@@ -5678,6 +5745,8 @@ var createContainer_default = ({ exposes, name: name2, remotes: remotes2, shared
           __webpack_require__2.federation[key] = prevFederation[key];
         }
         if (!__webpack_require__2.federation.instance) {
+          const pluginsToAdd = plugins || [];
+          __webpack_require__2.federation.initOptions.plugins = __webpack_require__2.federation.initOptions.plugins ? __webpack_require__2.federation.initOptions.plugins.concat(pluginsToAdd) : pluginsToAdd;
           __webpack_require__2.federation.instance = __webpack_require__2.federation.runtime.init(__webpack_require__2.federation.initOptions);
           if (__webpack_require__2.federation.attachShareScopeMap) {
             __webpack_require__2.federation.attachShareScopeMap(__webpack_require__2);
@@ -5768,6 +5837,7 @@ var createContainer_default = ({ exposes, name: name2, remotes: remotes2, shared
         initOptions: {
           "name": name2,
           "remotes": remotes2.map((remote2) => ({
+            "type": remote2.type,
             "alias": remote2.alias,
             "name": remote2.name,
             "entry": remote2.entry,
@@ -5866,68 +5936,6 @@ var createContainer_default = ({ exposes, name: name2, remotes: remotes2, shared
     };
   })();
   (() => {
-    __webpack_require__.S = {};
-    var initPromises = {};
-    var initTokens = {};
-    __webpack_require__.I = (name3, initScope) => {
-      if (!initScope)
-        initScope = [];
-      var initToken = initTokens[name3];
-      if (!initToken)
-        initToken = initTokens[name3] = {};
-      if (initScope.indexOf(initToken) >= 0)
-        return;
-      initScope.push(initToken);
-      if (initPromises[name3])
-        return initPromises[name3];
-      if (!__webpack_require__.o(__webpack_require__.S, name3))
-        __webpack_require__.S[name3] = {};
-      var scope = __webpack_require__.S[name3];
-      var warn3 = (msg) => {
-        if (typeof console !== "undefined" && console.warn)
-          console.warn(msg);
-      };
-      var uniqueName = "offline-remote_app2";
-      var register = (name4, version, factory, eager) => {
-        var versions = scope[name4] = scope[name4] || {};
-        var activeVersion = versions[version];
-        if (!activeVersion || !activeVersion.loaded && (!eager != !activeVersion.eager ? eager : uniqueName > activeVersion.from))
-          versions[version] = {
-            get: factory,
-            from: uniqueName,
-            eager: !!eager
-          };
-      };
-      var initExternal = (id) => {
-        var handleError = (err) => warn3("Initialization of sharing external failed: " + err);
-        try {
-          var module = __webpack_require__(id);
-          if (!module)
-            return;
-          var initFn = (module2) => module2 && module2.init && module2.init(__webpack_require__.S[name3], initScope);
-          if (module.then)
-            return promises.push(module.then(initFn, handleError));
-          var initResult = initFn(module);
-          if (initResult && initResult.then)
-            return promises.push(initResult["catch"](handleError));
-        } catch (err) {
-          handleError(err);
-        }
-      };
-      var promises = [];
-      switch (name3) {
-        case "default":
-          {
-          }
-          break;
-      }
-      if (!promises.length)
-        return initPromises[name3] = 1;
-      return initPromises[name3] = Promise.all(promises).then(() => initPromises[name3] = 1);
-    };
-  })();
-  (() => {
-    console.log("shared", shared);
     __webpack_require__.federation.initOptions.shared = shared;
     __webpack_require__.S = {};
     var initPromises = {};
@@ -6078,7 +6086,7 @@ var createdContainer = createContainer_default({
       name: "other",
       // mf-manifest.json is a file type generated in the new version of Module Federation build tools, providing richer functionality compared to remoteEntry
       // Preloading depends on the use of the mf-manifest.json file type
-      entry: "http://localhost:3003/remote.js",
+      entry: "http://localhost:3000/remote2.js",
       alias: "other"
     }
   ],
@@ -6094,9 +6102,9 @@ var createdContainer = createContainer_default({
     }
   }
 });
-var get = createdContainer.get;
-var init2 = createdContainer.init;
-var moduleMap = createdContainer.moduleMap;
+var get = async (a, b) => (await createdContainer).get(a, b);
+var init2 = async (a, b) => (await createdContainer).init(a, b);
+var moduleMap = async () => (await createdContainer).moduleMap;
 export {
   get,
   init2 as init,

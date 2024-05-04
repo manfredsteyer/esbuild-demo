@@ -1,6 +1,8 @@
 import bundler_runtime_base from '@module-federation/webpack-bundler-runtime'
-export default ({exposes, name, remotes, shared}) => {
-
+import instantiatePatch from "./federation";
+export default async (federationOptions) => {
+  await instantiatePatch(federationOptions, true)
+  const {exposes, name, remotes = [], shared, plugins} = federationOptions
   var __webpack_modules__ = ({
 
     /***/
@@ -21,14 +23,15 @@ export default ({exposes, name, remotes, shared}) => {
       for (var key in prevFederation) {
         __webpack_require__.federation[key] = prevFederation[key];
       }
-
-      if (!__webpack_require__.federation.instance) {
-
+      if(!__webpack_require__.federation.instance){
+        const pluginsToAdd = plugins || []
+        __webpack_require__.federation.initOptions.plugins = __webpack_require__.federation.initOptions.plugins ?
+          __webpack_require__.federation.initOptions.plugins.concat(pluginsToAdd) : pluginsToAdd;
         __webpack_require__.federation.instance = __webpack_require__.federation.runtime.init(__webpack_require__.federation.initOptions);
-        if (__webpack_require__.federation.attachShareScopeMap) {
+        if(__webpack_require__.federation.attachShareScopeMap){
           __webpack_require__.federation.attachShareScopeMap(__webpack_require__)
         }
-        if (__webpack_require__.federation.installInitialConsumes) {
+        if(__webpack_require__.federation.installInitialConsumes){
           __webpack_require__.federation.installInitialConsumes()
         }
       }
@@ -142,6 +145,7 @@ export default ({exposes, name, remotes, shared}) => {
         initOptions: {
           "name": name,
           "remotes": remotes.map(remote => ({
+            "type": remote.type,
             "alias": remote.alias,
             "name": remote.name,
             "entry": remote.entry,
@@ -266,67 +270,7 @@ export default ({exposes, name, remotes, shared}) => {
 
   /* webpack/runtime/sharing */
   (() => {
-    __webpack_require__.S = {};
-    var initPromises = {};
-    var initTokens = {};
-    __webpack_require__.I = (name, initScope) => {
-      if (!initScope) initScope = [];
-      // handling circular init calls
-      var initToken = initTokens[name];
-      if (!initToken) initToken = initTokens[name] = {};
-      if (initScope.indexOf(initToken) >= 0) return;
-      initScope.push(initToken);
-      // only runs once
-      if (initPromises[name]) return initPromises[name];
-      // creates a new share scope if needed
-      if (!__webpack_require__.o(__webpack_require__.S, name)) __webpack_require__.S[name] = {};
-      // runs all init snippets from all modules reachable
-      var scope = __webpack_require__.S[name];
-      var warn = (msg) => {
-        if (typeof console !== "undefined" && console.warn) console.warn(msg);
-      };
-      var uniqueName = "offline-remote_app2";
-      var register = (name, version, factory, eager) => {
-        var versions = scope[name] = scope[name] || {};
-        var activeVersion = versions[version];
-        if (!activeVersion || (!activeVersion.loaded && (!eager != !activeVersion.eager ? eager : uniqueName > activeVersion.from))) versions[version] = {
-          get: factory,
-          from: uniqueName,
-          eager: !!eager
-        };
-      };
-      var initExternal = (id) => {
-        var handleError = (err) => (warn("Initialization of sharing external failed: " + err));
-        try {
-          var module = __webpack_require__(id);
-          if (!module) return;
-          var initFn = (module) => (module && module.init && module.init(__webpack_require__.S[name], initScope))
-          if (module.then) return promises.push(module.then(initFn, handleError));
-          var initResult = initFn(module);
-          if (initResult && initResult.then) return promises.push(initResult['catch'](handleError));
-        } catch (err) {
-          handleError(err);
-        }
-      }
-      var promises = [];
-      switch (name) {
-        case "default": {
-          // share not connected yet
-          // register("lodash", "3.10.1", () => (__webpack_require__.e("vendors-node_modules_pnpm_lodash_3_10_1_node_modules_lodash_index_js").then(() => (() => (__webpack_require__(/*! ../../../node_modules/.pnpm/lodash@3.10.1/node_modules/lodash/index.js */ "../../../node_modules/.pnpm/lodash@3.10.1/node_modules/lodash/index.js"))))));
-          // register("react-dom", "16.14.0", () => (Promise.all([__webpack_require__.e("vendors-node_modules_pnpm_react-dom_16_14_0_react_16_14_0_node_modules_react-dom_index_js"), __webpack_require__.e("webpack_sharing_consume_default_react_react")]).then(() => (() => (__webpack_require__(/*! ../../../node_modules/.pnpm/react-dom@16.14.0_react@16.14.0/node_modules/react-dom/index.js */ "../../../node_modules/.pnpm/react-dom@16.14.0_react@16.14.0/node_modules/react-dom/index.js"))))));
-          // register("react", "16.14.0", () => (Promise.all([__webpack_require__.e("vendors-node_modules_pnpm_react_16_14_0_node_modules_react_index_js"), __webpack_require__.e("node_modules_pnpm_object-assign_4_1_1_node_modules_object-assign_index_js-node_modules_pnpm_p-178302")]).then(() => (() => (__webpack_require__(/*! ../../../node_modules/.pnpm/react@16.14.0/node_modules/react/index.js */ "../../../node_modules/.pnpm/react@16.14.0/node_modules/react/index.js"))))));
-        }
-          break;
-      }
-      if (!promises.length) return initPromises[name] = 1;
-      return initPromises[name] = Promise.all(promises).then(() => (initPromises[name] = 1));
-    };
-  })();
 
-  /* webpack/runtime/sharing */
-  (() => {
-
-    console.log('shared', shared)
     __webpack_require__.federation.initOptions.shared = shared
     __webpack_require__.S = {};
     var initPromises = {};

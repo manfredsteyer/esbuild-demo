@@ -5019,40 +5019,48 @@ export default await container.loadRemote(${JSON.stringify(ref)})
   return code;
 }
 function createVirtualModuleShare(name2, ref) {
-  console.log("name", name2);
   const code = `
 // find this FederationHost instance. 
 // Each virtual module needs to know what FederationHost to connect to for loading modules
 const container = __FEDERATION__.__INSTANCES__.find(container=>{
   return container.name === ${JSON.stringify(name2)}
 })
-console.log('container', container);
 // Federation Runtime takes care of script injection
 export default await container.loadShare(${JSON.stringify(ref)})
 `;
   return code;
 }
-var instantiatePatch = async (federationOptions) => {
+var instantiatePatch = async (federationOptions, skipInit) => {
   const importMap = {
     imports: {}
   };
-  init(federationOptions);
-  federationOptions.remotes.forEach((remote) => {
-    importMap.imports[remote.alias || remote.name] = remote.entry;
-  });
-  const remotes = await Promise.all(federationOptions.remotes.map(async (remote) => {
-    const container2 = await import(remote.entry);
-    return { ...remote, moduleMap: container2.moduleMap };
-  }));
-  remotes.forEach((remote) => {
-    Object.keys(remote.moduleMap).forEach((k) => {
-      k = k.replace(".", remote.alias || remote.name);
-      importMap.imports[k] = encodeInlineESM(createVirtualModule(federationOptions.name, k));
+  if (!skipInit) {
+    init(federationOptions);
+  }
+  if (federationOptions.remotes) {
+    federationOptions.remotes.forEach((remote) => {
+      importMap.imports[remote.alias || remote.name] = remote.entry;
     });
-  });
-  Object.keys(federationOptions.shared).forEach((share) => {
-    importMap.imports[share] = encodeInlineESM(createVirtualModuleShare(federationOptions.name, share));
-  });
+    const remotes = await Promise.all(federationOptions.remotes.map(async (remote) => {
+      const container2 = await import(remote.entry);
+      const moduleMap = await container2.moduleMap();
+      return { ...remote, moduleMap };
+    }));
+    remotes.forEach((remote) => {
+      Object.keys(remote.moduleMap).forEach((k) => {
+        k = k.replace(".", remote.alias || remote.name);
+        importMap.imports[k] = encodeInlineESM(createVirtualModule(federationOptions.name, k));
+      });
+    });
+  }
+  if (federationOptions.shared) {
+    const oimp = importShim.getImportMap();
+    Object.keys(federationOptions.shared).forEach((share) => {
+      if (oimp.imports[share])
+        return;
+      importMap.imports[share] = encodeInlineESM(createVirtualModuleShare(federationOptions.name, share));
+    });
+  }
   importShim.addImportMap(importMap);
 };
 var federation_default = instantiatePatch;
@@ -5075,7 +5083,10 @@ async function host() {
       react: {
         version: "7.8.1",
         scope: "default",
-        get: async () => await import("https://esm.sh/react"),
+        get: async () => {
+          console.log("LOADING HOST SHARED MODULE");
+          return await import("https://esm.sh/react");
+        },
         shareConfig: {
           singleton: true,
           requiredVersion: "^7.8.1"
@@ -5090,7 +5101,7 @@ async function host() {
   host$.subscribe((msg) => {
     console.log(msg);
   });
-  console.log("The host was build on 2024-05-04T03:21:33.232Z");
+  console.log("The host was build on 2024-05-04T04:51:17.521Z");
   import("@my/remote").then((m) => {
     m = m.default;
     console.log("from native import", m);

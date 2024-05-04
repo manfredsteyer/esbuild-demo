@@ -21,7 +21,10 @@ export async function host() {
             react: {
                 version: '7.8.1',
                 scope: 'default',
-                get: async () => await import('https://esm.sh/react'),
+                get: async () => {
+                    console.log('LOADING HOST SHARED MODULE');
+                    return await import('https://esm.sh/react')
+                },
                 shareConfig: {
                     singleton: true,
                     requiredVersion: '^7.8.1',
