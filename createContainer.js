@@ -1,5 +1,6 @@
 import bundler_runtime_base from '@module-federation/webpack-bundler-runtime'
 import instantiatePatch from "./federation";
+
 export default async (federationOptions) => {
   await instantiatePatch(federationOptions, true)
   const {exposes, name, remotes = [], shared, plugins} = federationOptions
@@ -77,7 +78,7 @@ export default async (federationOptions) => {
           shareScopeKey: "default"
         })
       };
-      __webpack_require__(/*! ./node_modules/.federation/entry.1f2288102e035e2ed66b2efaf60ad043.js */ "./node_modules/.federation/entry.1f2288102e035e2ed66b2efaf60ad043.js")
+      __webpack_require__("./node_modules/.federation/entry.1f2288102e035e2ed66b2efaf60ad043.js")
 
 // This exports getters to disallow modifications
       __webpack_require__.d(exports, {

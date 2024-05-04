@@ -5101,7 +5101,7 @@ async function host() {
   host$.subscribe((msg) => {
     console.log(msg);
   });
-  console.log("The host was build on 2024-05-04T05:56:39.476Z");
+  console.log("The host was build on 2024-05-04T05:58:01.370Z");
   import("@my/remote").then((m) => {
     m = m.default;
     console.log("from native import", m);

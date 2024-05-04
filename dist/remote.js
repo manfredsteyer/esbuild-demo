@@ -5791,10 +5791,7 @@ var createContainer_default = async (federationOptions) => {
             shareScopeKey: "default"
           });
         };
-        __webpack_require__2(
-          /*! ./node_modules/.federation/entry.1f2288102e035e2ed66b2efaf60ad043.js */
-          "./node_modules/.federation/entry.1f2288102e035e2ed66b2efaf60ad043.js"
-        );
+        __webpack_require__2("./node_modules/.federation/entry.1f2288102e035e2ed66b2efaf60ad043.js");
         __webpack_require__2.d(exports, {
           get: () => get2,
           init: () => init3,
