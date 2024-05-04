@@ -5726,211 +5726,154 @@ var federation_default = instantiatePatch;
 var createContainer_default = async (federationOptions) => {
   await federation_default(federationOptions, true);
   const { exposes, name: name2, remotes: remotes2 = [], shared, plugins } = federationOptions;
-  var __webpack_modules__ = {
-    /***/
-    "./node_modules/.federation/entry.1f2288102e035e2ed66b2efaf60ad043.js": (
-      /*!****************************************************************************!*\
-      !*** ./node_modules/.federation/entry.1f2288102e035e2ed66b2efaf60ad043.js ***!
-      \****************************************************************************/
-      /***/
-      (__unused_webpack_module, __webpack_exports__2, __webpack_require__2) => {
-        __webpack_require__2.r(__webpack_exports__2);
-        var bundler_runtime = /* @__PURE__ */ __webpack_require__2.n(federation);
-        var prevFederation = __webpack_require__2.federation;
-        __webpack_require__2.federation = {};
-        for (var key in bundler_runtime()) {
-          __webpack_require__2.federation[key] = bundler_runtime()[key];
+  const __webpack_modules__ = {
+    "./node_modules/.federation/entry.1f2288102e035e2ed66b2efaf60ad043.js": (module, __webpack_exports__2, __webpack_require__2) => {
+      __webpack_require__2.r(__webpack_exports__2);
+      const bundler_runtime = __webpack_require__2.n(federation);
+      const prevFederation = __webpack_require__2.federation;
+      __webpack_require__2.federation = {};
+      for (const key in bundler_runtime()) {
+        __webpack_require__2.federation[key] = bundler_runtime()[key];
+      }
+      for (const key in prevFederation) {
+        __webpack_require__2.federation[key] = prevFederation[key];
+      }
+      if (!__webpack_require__2.federation.instance) {
+        const pluginsToAdd = plugins || [];
+        __webpack_require__2.federation.initOptions.plugins = __webpack_require__2.federation.initOptions.plugins ? __webpack_require__2.federation.initOptions.plugins.concat(pluginsToAdd) : pluginsToAdd;
+        __webpack_require__2.federation.instance = __webpack_require__2.federation.runtime.init(__webpack_require__2.federation.initOptions);
+        if (__webpack_require__2.federation.attachShareScopeMap) {
+          __webpack_require__2.federation.attachShareScopeMap(__webpack_require__2);
         }
-        for (var key in prevFederation) {
-          __webpack_require__2.federation[key] = prevFederation[key];
-        }
-        if (!__webpack_require__2.federation.instance) {
-          const pluginsToAdd = plugins || [];
-          __webpack_require__2.federation.initOptions.plugins = __webpack_require__2.federation.initOptions.plugins ? __webpack_require__2.federation.initOptions.plugins.concat(pluginsToAdd) : pluginsToAdd;
-          __webpack_require__2.federation.instance = __webpack_require__2.federation.runtime.init(__webpack_require__2.federation.initOptions);
-          if (__webpack_require__2.federation.attachShareScopeMap) {
-            __webpack_require__2.federation.attachShareScopeMap(__webpack_require__2);
-          }
-          if (__webpack_require__2.federation.installInitialConsumes) {
-            __webpack_require__2.federation.installInitialConsumes();
-          }
+        if (__webpack_require__2.federation.installInitialConsumes) {
+          __webpack_require__2.federation.installInitialConsumes();
         }
       }
-    ),
-    /***/
-    "webpack/container/entry/app2": (
-      /*!***********************!*\
-      !*** container entry ***!
-      \***********************/
-      /***/
-      (__unused_webpack_module, exports, __webpack_require__2) => {
-        var moduleMap2 = {};
-        for (var key in exposes) {
-          if (Object.prototype.hasOwnProperty.call(exposes, key)) {
-            moduleMap2[key] = () => {
-              return Promise.resolve(exposes[key]()).then((m) => {
-                return () => m;
-              });
-            };
-          }
+    },
+    "webpack/container/entry/createContainer": (module, exports, __webpack_require__2) => {
+      const moduleMap2 = {};
+      for (const key in exposes) {
+        if (Object.prototype.hasOwnProperty.call(exposes, key)) {
+          moduleMap2[key] = () => Promise.resolve(exposes[key]()).then((m) => () => m);
         }
-        var get2 = (module, getScope) => {
-          __webpack_require__2.R = getScope;
-          getScope = __webpack_require__2.o(moduleMap2, module) ? moduleMap2[module]() : Promise.resolve().then(() => {
-            throw new Error('Module "' + module + '" does not exist in container.');
-          });
-          __webpack_require__2.R = void 0;
-          return getScope;
-        };
-        var init3 = (shareScope, initScope, remoteEntryInitOptions) => {
-          return __webpack_require__2.federation.bundlerRuntime.initContainerEntry({
-            webpackRequire: __webpack_require__2,
-            shareScope,
-            initScope,
-            remoteEntryInitOptions,
-            shareScopeKey: "default"
-          });
-        };
-        __webpack_require__2("./node_modules/.federation/entry.1f2288102e035e2ed66b2efaf60ad043.js");
-        __webpack_require__2.d(exports, {
-          get: () => get2,
-          init: () => init3,
-          moduleMap: () => moduleMap2
+      }
+      const get2 = (module2, getScope) => {
+        __webpack_require__2.R = getScope;
+        getScope = __webpack_require__2.o(moduleMap2, module2) ? moduleMap2[module2]() : Promise.resolve().then(() => {
+          throw new Error(`Module "${module2}" does not exist in container.`);
         });
-      }
-    )
+        __webpack_require__2.R = void 0;
+        return getScope;
+      };
+      const init3 = (shareScope, initScope, remoteEntryInitOptions) => {
+        return __webpack_require__2.federation.bundlerRuntime.initContainerEntry({
+          webpackRequire: __webpack_require__2,
+          shareScope,
+          initScope,
+          remoteEntryInitOptions,
+          shareScopeKey: "default"
+        });
+      };
+      __webpack_require__2("./node_modules/.federation/entry.1f2288102e035e2ed66b2efaf60ad043.js");
+      __webpack_require__2.d(exports, {
+        get: () => get2,
+        init: () => init3,
+        moduleMap: () => moduleMap2
+      });
+    }
   };
-  var __webpack_module_cache__ = {};
-  function __webpack_require__(moduleId) {
-    var cachedModule = __webpack_module_cache__[moduleId];
+  const __webpack_module_cache__ = {};
+  const __webpack_require__ = (moduleId) => {
+    let cachedModule = __webpack_module_cache__[moduleId];
     if (cachedModule !== void 0) {
       return cachedModule.exports;
     }
-    var module = __webpack_module_cache__[moduleId] = {
+    let module = __webpack_module_cache__[moduleId] = {
       id: moduleId,
       loaded: false,
       exports: {}
     };
-    var execOptions = {
+    const execOptions = {
       id: moduleId,
       module,
       factory: __webpack_modules__[moduleId],
       require: __webpack_require__
     };
-    __webpack_require__.i.forEach(function(handler) {
+    __webpack_require__.i.forEach((handler) => {
       handler(execOptions);
     });
     module = execOptions.module;
     execOptions.factory.call(module.exports, module, module.exports, execOptions.require);
     module.loaded = true;
     return module.exports;
-  }
+  };
   __webpack_require__.m = __webpack_modules__;
   __webpack_require__.c = __webpack_module_cache__;
   __webpack_require__.i = [];
-  (() => {
-    if (!__webpack_require__.federation) {
-      __webpack_require__.federation = {
-        initOptions: {
-          "name": name2,
-          "remotes": remotes2.map((remote2) => ({
-            "type": remote2.type,
-            "alias": remote2.alias,
-            "name": remote2.name,
-            "entry": remote2.entry,
-            "shareScope": remote2.shareScope || "default"
-          }))
-        },
-        chunkMatcher: function(chunkId) {
-          return true;
-        },
-        rootOutputDir: "",
-        initialConsumes: void 0,
-        bundlerRuntimeOptions: {}
-      };
+  if (!__webpack_require__.federation) {
+    __webpack_require__.federation = {
+      initOptions: {
+        "name": name2,
+        "remotes": remotes2.map((remote2) => ({
+          "type": remote2.type,
+          "alias": remote2.alias,
+          "name": remote2.name,
+          "entry": remote2.entry,
+          "shareScope": remote2.shareScope || "default"
+        }))
+      },
+      chunkMatcher: () => true,
+      rootOutputDir: "",
+      initialConsumes: void 0,
+      bundlerRuntimeOptions: {}
+    };
+  }
+  __webpack_require__.n = (module) => {
+    const getter = module && module.__esModule ? () => module["default"] : () => module;
+    __webpack_require__.d(getter, { a: getter });
+    return getter;
+  };
+  __webpack_require__.d = (exports, definition) => {
+    for (const key in definition) {
+      if (__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+        Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+      }
+    }
+  };
+  __webpack_require__.f = {};
+  __webpack_require__.g = (() => {
+    if (typeof globalThis === "object")
+      return globalThis;
+    try {
+      return new Function("return this")();
+    } catch (e) {
+      if (typeof window === "object")
+        return window;
     }
   })();
-  (() => {
-    __webpack_require__.n = (module) => {
-      var getter = module && module.__esModule ? () => module["default"] : () => module;
-      __webpack_require__.d(getter, { a: getter });
-      return getter;
-    };
-  })();
-  (() => {
-    __webpack_require__.d = (exports, definition) => {
-      for (var key in definition) {
-        if (__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
-          Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
-        }
-      }
-    };
-  })();
-  (() => {
-    __webpack_require__.f = {};
-  })();
-  (() => {
-    __webpack_require__.g = function() {
-      if (typeof globalThis === "object")
-        return globalThis;
-      try {
-        return this || new Function("return this")();
-      } catch (e) {
-        if (typeof window === "object")
-          return window;
-      }
-    }();
-  })();
-  (() => {
-    __webpack_require__.o = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop);
-  })();
-  (() => {
-    __webpack_require__.r = (exports) => {
-      if (typeof Symbol !== "undefined" && Symbol.toStringTag) {
-        Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
-      }
-      Object.defineProperty(exports, "__esModule", { value: true });
-    };
-  })();
-  (() => {
-    var chunkMapping = {};
-    var idToExternalAndNameMapping = {};
-    var idToRemoteMap = {};
-    __webpack_require__.federation.bundlerRuntimeOptions.remotes = {
-      idToRemoteMap,
-      chunkMapping,
-      idToExternalAndNameMapping,
-      webpackRequire: __webpack_require__
-    };
-    __webpack_require__.f.remotes = (chunkId, promises) => {
-      __webpack_require__.federation.bundlerRuntime.remotes({
-        idToRemoteMap,
-        chunkMapping,
-        idToExternalAndNameMapping,
-        chunkId,
-        promises,
-        webpackRequire: __webpack_require__
-      });
-    };
-  })();
-  (() => {
-    __webpack_require__.federation.initOptions.shared = shared;
-    __webpack_require__.S = {};
-    var initPromises = {};
-    var initTokens = {};
-    __webpack_require__.I = (name3, initScope) => {
-      return __webpack_require__.federation.bundlerRuntime.I({
-        shareScopeName: name3,
-        webpackRequire: __webpack_require__,
-        initPromises,
-        initTokens,
-        initScope
-      });
-    };
-  })();
-  var __webpack_exports__ = __webpack_require__("webpack/container/entry/app2");
-  var __webpack_exports__get = __webpack_exports__.get;
-  var __webpack_exports__init = __webpack_exports__.init;
+  __webpack_require__.o = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop);
+  __webpack_require__.r = (exports) => {
+    if (typeof Symbol !== "undefined" && Symbol.toStringTag) {
+      Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
+    }
+    Object.defineProperty(exports, "__esModule", { value: true });
+  };
+  __webpack_require__.federation.initOptions.shared = shared;
+  __webpack_require__.S = {};
+  const initPromises = {};
+  const initTokens = {};
+  __webpack_require__.I = (name3, initScope) => {
+    return __webpack_require__.federation.bundlerRuntime.I({
+      shareScopeName: name3,
+      webpackRequire: __webpack_require__,
+      initPromises,
+      initTokens,
+      initScope
+    });
+  };
+  const __webpack_exports__ = __webpack_require__("webpack/container/entry/createContainer");
+  const __webpack_exports__get = __webpack_exports__.get;
+  const __webpack_exports__init = __webpack_exports__.init;
   return __webpack_exports__;
 };
 

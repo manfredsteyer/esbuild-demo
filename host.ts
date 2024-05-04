@@ -1,8 +1,6 @@
 import {of} from 'rxjs'
 import federation from './federation.js';
 
-
-
 //@ts-ignore
 export async function host() {
     await federation({
