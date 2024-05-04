@@ -4998,15 +4998,36 @@ function init(options) {
     return instance;
   }
 }
-function loadRemote(...args) {
-  assert(FederationInstance, "Please call init first");
-  const loadRemote1 = FederationInstance.loadRemote;
-  return loadRemote1.apply(FederationInstance, args);
-}
 setGlobalFederationConstructor(FederationHost);
 
+// federation.js
+function encodeInlineESM(code) {
+  const encodedCode = encodeURIComponent(code);
+  const inlineESM = `data:text/javascript;charset=utf-8,${encodedCode}`;
+  return inlineESM;
+}
+var instantiatePatch = (federationOptions) => {
+  init(federationOptions);
+  const code = `
+// find this FederationHost instance. 
+// Each virtual module needs to know what FederationHost to connect to for loading modules
+const container = __FEDERATION__.__INSTANCES__.find(container=>{
+  return container.name === ${JSON.stringify(federationOptions.name)}
+})
+// Federation Runtime takes care of script injection
+export default await container.loadRemote('@my/remote')
+`;
+  const inlineESM = encodeInlineESM(code);
+  const importMap = {
+    imports: {}
+  };
+  importMap.imports["@my/remote"] = inlineESM;
+  importShim.addImportMap(importMap);
+};
+var federation_default = instantiatePatch;
+
 // host.ts
-init({
+federation_default({
   name: "host",
   remotes: [
     {
@@ -5024,13 +5045,7 @@ function host() {
   host$.subscribe((msg) => {
     console.log(msg);
   });
-  console.log("The host was build on 2024-05-04T02:05:42.214Z");
-  loadRemote("@my/remote").then((m) => {
-    const remote$ = m.remote();
-    remote$.subscribe((msg) => {
-      console.log(msg);
-    });
-  });
+  console.log("The host was build on 2024-05-04T02:28:27.003Z");
   import("@my/remote").then((m) => {
     m = m.default;
     console.log("from native import", m);

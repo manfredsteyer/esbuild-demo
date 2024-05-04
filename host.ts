@@ -1,8 +1,7 @@
 import { of } from "rxjs";
-import {init,loadRemote} from "@module-federation/runtime";
-// import thing from '@my/utils'
-// console.log(thing)
-init({
+import federation from './federation.js';
+
+federation({
     name: 'host',
     remotes: [
         {
@@ -14,7 +13,8 @@ init({
             alias: "@my"
         },
     ],
-});
+})
+
 //@ts-ignore
 export function host() {
 
@@ -24,13 +24,6 @@ export function host() {
         console.log(msg);
     });
     console.log('The host was build on __BUILD_DATE__')
-    loadRemote('@my/remote').then((m)=>{
-        const remote$ = m.remote();
-        remote$.subscribe((msg: string) => {
-            console.log(msg);
-        });
-    })
-    // console.log('utils',import('@my/utils'));
     import('@my/remote').then(m => {
         //@ts-ignore
         m = m.default

@@ -17,44 +17,7 @@
 <body>
     <h1>Look into your JavaScript console!</h1>
 
-<!--    <script type="importmap">-->
-<!--        {-->
-<!--            "imports": {-->
-<!--                "host": "./host.js"-->
-<!--            }-->
-<!--        }-->
-<!--    </script>-->
-
-<!--    <script type="module-shim">-->
-<!--      function encodeInlineESM(code) {-->
-<!--        // Encode the JavaScript code-->
-<!--        const encodedCode = encodeURIComponent(code);-->
-
-<!--        // Create the inline ESM string-->
-<!--        const inlineESM = `data:text/javascript;charset=utf-8,${encodedCode}`;-->
-
-<!--        return inlineESM;-->
-<!--      }-->
-
-<!--      // Usage-->
-<!--      const code = `export default msg => console.log(msg)`;-->
-
-<!--      const inlineESM = encodeInlineESM(code);-->
-
-<!--      const importMap = {-->
-<!--        imports: {}-->
-<!--      }-->
-
-
-<!--      importMap.imports['@my/utils'] = inlineESM;-->
-<!--      importMap.imports['@my/remote'] = './remote.js';-->
-<!--      importMap.imports['host'] = './host.js';-->
-<!--      importShim.addImportMap(importMap);-->
-
-
-<!-- import('host');-->
-<!--    </script>-->
-    <script src="shim.js" type="module-shim"></script>
+    <script src="host.js" type="module-shim"></script>
 
 </body>
 
