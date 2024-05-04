@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "build:remote": "node build-remote.js",
+    "build:remote2": "node build-remote2.js",
     "build:host": "node build-host.js",
-    "build": "npm run build:host && npm run build:remote",
+    "build": "npm run build:remote2 && npm run build:host && npm run build:remote",
     "start": "serve dist",
     "dev": "npm run build && npm run start"
   },

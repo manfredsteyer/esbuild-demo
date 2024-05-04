@@ -2,10 +2,10 @@ const esbuild = require("esbuild");
 
 esbuild
   .build({
-    entryPoints: ["container2.js"],
+    entryPoints: ["container3.js"],
     bundle: true,
     external:['react'],
-    outfile: "dist/remote.js",
+    outfile: "dist/remote2.js",
     platform: "browser",
     target: "es2020",
     sourcemap: true,

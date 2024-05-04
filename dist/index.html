@@ -5,20 +5,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Host</title>
+    <script type="esms-options">
+        {
+          "shimMode": true
+        }
+    </script>
+    <script src="https://ga.jspm.io/npm:es-module-shims@1.10.0/dist/es-module-shims.js"></script>
+
 </head>
 
 <body>
     <h1>Look into your JavaScript console!</h1>
 
-    <script type="importmap">
-        {
-            "imports": {
-                "@my/remote": "./remote.js"
-            }
-        }
-    </script>
-
-    <script src="host.js" type="module"></script>
+    <script src="host.js" type="module-shim"></script>
 
 </body>
 

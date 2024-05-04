@@ -4998,57 +4998,122 @@ function init(options) {
     return instance;
   }
 }
-function loadRemote(...args) {
-  assert(FederationInstance, "Please call init first");
-  const loadRemote1 = FederationInstance.loadRemote;
-  return loadRemote1.apply(FederationInstance, args);
-}
 setGlobalFederationConstructor(FederationHost);
 
-// host.ts
-init({
-  name: "host",
-  remotes: [
-    {
-      type: "esm",
-      name: "@my",
-      // mf-manifest.json is a file type generated in the new version of Module Federation build tools, providing richer functionality compared to remoteEntry
-      // Preloading depends on the use of the mf-manifest.json file type
-      entry: "http://localhost:3000/remote.js",
-      alias: "@my"
-    }
-  ]
-});
-var originalImport = (path2) => import(path2);
-globalThis.import = async function(url2) {
-  try {
-    return await loadRemote(url2);
-  } catch (e) {
+// federation.js
+function encodeInlineESM(code) {
+  const encodedCode = encodeURIComponent(code);
+  const inlineESM = `data:text/javascript;charset=utf-8,${encodedCode}`;
+  return inlineESM;
+}
+function createVirtualModule(name2, ref) {
+  const code = `
+// find this FederationHost instance. 
+// Each virtual module needs to know what FederationHost to connect to for loading modules
+const container = __FEDERATION__.__INSTANCES__.find(container=>{
+  return container.name === ${JSON.stringify(name2)}
+})
+// Federation Runtime takes care of script injection
+export default await container.loadRemote(${JSON.stringify(ref)})
+`;
+  return code;
+}
+function createVirtualModuleShare(name2, ref) {
+  const code = `
+// find this FederationHost instance. 
+// Each virtual module needs to know what FederationHost to connect to for loading modules
+const container = __FEDERATION__.__INSTANCES__.find(container=>{
+  return container.name === ${JSON.stringify(name2)}
+})
+// Federation Runtime takes care of script injection
+export default await container.loadShare(${JSON.stringify(ref)})
+`;
+  return code;
+}
+var instantiatePatch = async (federationOptions, skipInit) => {
+  const importMap = {
+    imports: {}
+  };
+  if (!skipInit) {
+    init(federationOptions);
   }
-  console.log("Custom import function called with URL:", url2);
-  return originalImport(url2);
+  if (federationOptions.remotes) {
+    federationOptions.remotes.forEach((remote) => {
+      importMap.imports[remote.alias || remote.name] = remote.entry;
+    });
+    const remotes = await Promise.all(federationOptions.remotes.map(async (remote) => {
+      const container2 = await import(remote.entry);
+      const moduleMap = await container2.moduleMap();
+      return { ...remote, moduleMap };
+    }));
+    remotes.forEach((remote) => {
+      Object.keys(remote.moduleMap).forEach((k) => {
+        k = k.replace(".", remote.alias || remote.name);
+        importMap.imports[k] = encodeInlineESM(createVirtualModule(federationOptions.name, k));
+      });
+    });
+  }
+  if (federationOptions.shared) {
+    const oimp = importShim.getImportMap();
+    Object.keys(federationOptions.shared).forEach((share) => {
+      if (oimp.imports[share])
+        return;
+      importMap.imports[share] = encodeInlineESM(createVirtualModuleShare(federationOptions.name, share));
+    });
+  }
+  importShim.addImportMap(importMap);
 };
-function host() {
+var federation_default = instantiatePatch;
+
+// host.ts
+async function host() {
+  await federation_default({
+    name: "host",
+    remotes: [
+      {
+        type: "esm",
+        name: "@my",
+        // mf-manifest.json is a file type generated in the new version of Module Federation build tools, providing richer functionality compared to remoteEntry
+        // Preloading depends on the use of the mf-manifest.json file type
+        entry: "http://localhost:3000/remote.js",
+        alias: "@my"
+      }
+    ],
+    shared: {
+      react: {
+        version: "7.8.1",
+        scope: "default",
+        get: async () => {
+          console.log("LOADING HOST SHARED MODULE");
+          return await import("https://esm.sh/react");
+        },
+        shareConfig: {
+          singleton: true,
+          requiredVersion: "^7.8.1"
+        }
+      }
+    }
+  });
+  import("react").then((r) => {
+    console.log("shared react", r);
+  });
   const host$ = of("Hello from the host!");
   host$.subscribe((msg) => {
     console.log(msg);
   });
-  console.log("The host was build on __BUILD_DATE__");
-  loadRemote("@my/remote").then((m) => {
-    const remote$ = m.remote();
-    remote$.subscribe((msg) => {
-      console.log(msg);
-    });
-  });
-  globalThis.import("@my/remote").then((m) => {
+  console.log("The host was build on 2024-05-04T06:05:23.103Z");
+  import("@my/remote").then((m) => {
+    m = m.default;
+    console.log("from native import", m);
     const remote$ = m.remote();
     remote$.subscribe((msg) => {
       console.log(msg);
     });
   });
 }
-host();
+var host_default = host();
 export {
+  host_default as default,
   host
 };
 //# sourceMappingURL=host.js.map

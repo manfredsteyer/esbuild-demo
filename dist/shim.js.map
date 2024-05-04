@@ -1,0 +1,9 @@
+// Built with esbuild
+
+{
+  "version": 3,
+  "sources": ["../shim.js"],
+  "sourcesContent": ["\n\n\ndocument.body.appendChild(Object.assign(document.createElement('script'), {\n  type: 'module-shim',\n  src: './host.js',\n}));\n\n\n\n"],
+  "mappings": ";AAGA,SAAS,KAAK,YAAY,OAAO,OAAO,SAAS,cAAc,QAAQ,GAAG;AAAA,EACxE,MAAM;AAAA,EACN,KAAK;AACP,CAAC,CAAC;",
+  "names": []
+}
