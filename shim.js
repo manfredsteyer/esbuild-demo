@@ -10,11 +10,11 @@ function encodeInlineESM(code) {
 
 // Usage
 const code = `
-import "@my";
+// find this FederationHost instance. Each virtual module needs to know what FederationHost to connect to for loading modules
 const container = __FEDERATION__.__INSTANCES__.find(container=>{
   return container.name === 'host'
 })
-
+// Federation Runtime takes care of script injection
 export default await container.loadRemote('@my/remote')
 `;
 
@@ -25,7 +25,6 @@ const importMap = {
 }
 
 
-importMap.imports['@my'] = './remote.js';
 importMap.imports['@my/remote'] = inlineESM;
 importMap.imports['host'] = './host.js';
 importShim.addImportMap(importMap);

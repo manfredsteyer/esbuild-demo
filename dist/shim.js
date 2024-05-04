@@ -7,7 +7,6 @@ function encodeInlineESM(code2) {
   return inlineESM2;
 }
 var code = `
-import "@my";
 const container = __FEDERATION__.__INSTANCES__.find(container=>{
   return container.name === 'host'
 })
