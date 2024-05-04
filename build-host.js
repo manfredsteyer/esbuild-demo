@@ -2,6 +2,7 @@ const esbuild = require("esbuild");
 const demoEsBuildPlugin = require("./demo-esbuild-plugin.js");
 const fs = require('fs');
 
+
 esbuild
   .build({
     entryPoints: ["host.ts"],
@@ -26,7 +27,7 @@ esbuild
     if (result.outputFiles) {
       result.outputFiles.forEach(file => {
         fs.mkdirSync(require('path').dirname(file.path), { recursive: true });
-        
+
         // Add comment for demo purposes
         fs.writeFileSync(file.path, '// Built with esbuild\n\n' + file.text);
         console.log(`Wrote file: ${file.path}`);

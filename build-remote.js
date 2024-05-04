@@ -2,7 +2,7 @@ const esbuild = require("esbuild");
 
 esbuild
   .build({
-    entryPoints: ["remote.ts"],
+    entryPoints: ["container2.js"],
     bundle: true,
     outfile: "dist/remote.js",
     platform: "browser",
