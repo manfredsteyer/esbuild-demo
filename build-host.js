@@ -6,7 +6,7 @@ const fs = require('fs');
 esbuild
   .build({
     entryPoints: ["host.ts"],
-    external: ["@my/remote","@my/utils", 'react', 'rxjs'],
+    external: ["@my/remote","@my/utils", 'react', 'rxjs', "./external/*"],
     bundle: true,
     outfile: "dist/host.js",
     platform: "browser",

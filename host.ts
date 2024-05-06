@@ -6,7 +6,7 @@ export async function host() {
         name: 'host',
         remotes: [
             {
-                type:'esm',
+                type: 'esm',
                 name: "@my",
                 // mf-manifest.json is a file type generated in the new version of Module Federation build tools, providing richer functionality compared to remoteEntry
                 // Preloading depends on the use of the mf-manifest.json file type
@@ -20,7 +20,7 @@ export async function host() {
                 scope: 'default',
                 get: async () => {
                     console.log('LOADING HOST SHARED RXJS');
-                    return await import('https://esm.sh/rxjs')
+                    return await import('./external/rxjs.js')
                 },
                 shareConfig: {
                     singleton: true,
@@ -33,7 +33,7 @@ export async function host() {
                 get: async () => {
                     console.log('LOADING HOST SHARED REACT');
 
-                    return await import('https://esm.sh/react')
+                    return await import('./external/react.js')
                 },
                 shareConfig: {
                     singleton: true,
@@ -42,17 +42,16 @@ export async function host() {
             },
         },
     })
-    // const {of} = await import('rxjs');
-console.log(import('rxjs'));
-    import('react').then((r)=>{
+    const {of} = (await import('rxjs')).default
+    import('react').then((r) => {
         console.log('shared react', r);
     })
 
-    // const host$ = of('Hello from the host!');
+    const host$ = of('Hello from the host!');
 
-    // host$.subscribe((msg: string) => {
-    //     console.log(msg);
-    // });
+    host$.subscribe((msg: string) => {
+        console.log(msg);
+    });
     console.log('The host was build on __BUILD_DATE__')
     import('@my/remote').then(m => {
         //@ts-ignore

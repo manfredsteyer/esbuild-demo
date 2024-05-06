@@ -3824,7 +3824,7 @@ async function host() {
         scope: "default",
         get: async () => {
           console.log("LOADING HOST SHARED RXJS");
-          return await import("rxjs");
+          return await import("./external/rxjs.js");
         },
         shareConfig: {
           singleton: true,
@@ -3836,7 +3836,7 @@ async function host() {
         scope: "default",
         get: async () => {
           console.log("LOADING HOST SHARED REACT");
-          return await import("react");
+          return await import("./external/react.js");
         },
         shareConfig: {
           singleton: true,
@@ -3845,11 +3845,15 @@ async function host() {
       }
     }
   });
-  console.log(import("rxjs"));
+  const { of } = (await import("rxjs")).default;
   import("react").then((r) => {
     console.log("shared react", r);
   });
-  console.log("The host was build on 2024-05-04T19:38:49.020Z");
+  const host$ = of("Hello from the host!");
+  host$.subscribe((msg) => {
+    console.log(msg);
+  });
+  console.log("The host was build on 2024-05-06T06:24:19.025Z");
   import("@my/remote").then((m) => {
     m = m.default;
     console.log("from native import", m);

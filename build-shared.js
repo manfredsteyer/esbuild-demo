@@ -8,7 +8,7 @@ esbuild
     },
     bundle: true,
 // external:[''],
-    outdir: "dist",
+    outdir: "dist/external",
     platform: "browser",
     target: "es2020",
     sourcemap: true,
