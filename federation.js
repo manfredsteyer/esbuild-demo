@@ -75,8 +75,9 @@ const instantiatePatch = async (federationOptions, skipInit) => {
     Object.keys(federationOptions.shared).forEach(share => {
       // already patched import map to federation
       if(oimp.imports[share]) return
-      importMap.imports[share] = encodeInlineESM(createVirtualModuleShare(federationOptions.name, share))
-      console.log(importMap.imports[share], share )
+      importMap.imports[share] = './external/mf_' + share + '.js'
+      // importMap.imports[share] = encodeInlineESM(createVirtualModuleShare(federationOptions.name, share))
+      // console.log(importMap.imports[share], share )
     })
   }
 

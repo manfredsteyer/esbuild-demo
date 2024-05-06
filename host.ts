@@ -42,7 +42,7 @@ export async function host() {
             },
         },
     })
-    const {of} = (await import('rxjs')).default
+    const {of} = (await import('rxjs'))
     import('react').then((r) => {
         console.log('shared react', r);
     })
