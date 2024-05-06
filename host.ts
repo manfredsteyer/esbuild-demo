@@ -20,7 +20,7 @@ export async function host() {
                 scope: 'default',
                 get: async () => {
                     console.log('LOADING HOST SHARED RXJS');
-                    return await import('rxjs')
+                    return await import('https://esm.sh/rxjs')
                 },
                 shareConfig: {
                     singleton: true,
@@ -32,7 +32,8 @@ export async function host() {
                 scope: 'default',
                 get: async () => {
                     console.log('LOADING HOST SHARED REACT');
-                    return await import('react')
+
+                    return await import('https://esm.sh/react')
                 },
                 shareConfig: {
                     singleton: true,
