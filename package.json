@@ -5,10 +5,8 @@
   "main": "index.js",
   "scripts": {
     "build:remote": "node build-remote.js",
-    "build:remote2": "node build-remote2.js",
-    "build:shared": "node build-shared.js",
     "build:host": "node build-host.js",
-    "build": "npm run build:shared && npm run build:remote2 && npm run build:host && npm run build:remote",
+    "build": "npm run build:host && npm run build:remote",
     "start": "serve dist",
     "dev": "npm run build && npm run start"
   },
@@ -16,12 +14,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@module-federation/runtime": "^0.1.11",
-    "@module-federation/webpack-bundler-runtime": "^0.1.11",
     "react": "^18.3.1",
     "rxjs": "^7.8.1"
   },
   "devDependencies": {
+    "@module-federation/esbuild": "^0.0.0-next-20240524225331",
+    "@module-federation/runtime": "^0.1.11",
+    "@module-federation/webpack-bundler-runtime": "^0.1.11",
     "esbuild": "^0.20.2",
     "serve": "^14.2.3",
     "typescript": "^5.4.5"

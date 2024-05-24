@@ -1,7 +1,7 @@
-import { of } from "rxjs";
-
-export function remote() {
-    return of('Hello from the remote!');
-}
-
-
+(async () => {
+    setTimeout(async () => {
+        const bootstrap = (await import('./bootstrap-remote')).remote
+        //@ts-ignore
+        bootstrap();
+    }, 400);
+})();
