@@ -9,23 +9,11 @@ const {
 const { federationBuilder } = require('@module-federation/esbuild/build');
 
 async function buildProject() {
-  const projectName = 'host';
   const tsConfig = 'tsconfig.json';
   const outputPath = path.join('dist');
 
-  await federationBuilder.init({
-    options: {
-      workspaceRoot: path.join(__dirname),
-      outputPath,
-      tsConfig,
-      federationConfig: path.join('host.federation.config.js'),
-      verbose: false,
-      watch: false,
-    },
-  });
 
-
-  const federationConfig = federationBuilder.config;
+  const federationConfig = require('./host.federation.config.js')
 
   const result = await esbuild.build({
     entryPoints: [path.join('host.ts')],
@@ -42,7 +30,7 @@ async function buildProject() {
     sourcemap: true,
     minify: false,
     loader: { ".ts": "ts" },
-    plugins: [moduleFederationPlugin(federationBuilder)],
+    plugins: [moduleFederationPlugin(federationConfig)],
   });
 }
 

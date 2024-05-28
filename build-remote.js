@@ -9,23 +9,10 @@ const {
 const { federationBuilder } = require('@module-federation/esbuild/build');
 
 async function buildProject() {
-  const projectName = 'remote';
   const tsConfig = 'tsconfig.json';
   const outputPath = path.join('dist');
 
-  await federationBuilder.init({
-    options: {
-      workspaceRoot: path.join(__dirname),
-      outputPath,
-      tsConfig,
-      federationConfig: path.join('remote.federation.config.js'),
-      verbose: false,
-      watch: false,
-    },
-  });
 
-
-  const federationConfig = federationBuilder.config;
 
   const result = await esbuild.build({
     external: federationBuilder.externals,
@@ -41,7 +28,7 @@ async function buildProject() {
     sourcemap: true,
     minify: false,
     loader: { ".ts": "ts" },
-    plugins: [moduleFederationPlugin(federationBuilder)],
+    plugins: [moduleFederationPlugin(require('./remote.federation.config'))],
   });
 
   // if (result.outputFiles) {
