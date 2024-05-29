@@ -5,8 +5,7 @@ const path = require('path');
 const fs = require('fs');
 const {
   moduleFederationPlugin,
-} = require('@module-federation/esbuild/esbuild-adapter');
-const { federationBuilder } = require('@module-federation/esbuild/build');
+} = require('@module-federation/esbuild/plugin');
 
 async function buildProject() {
   const tsConfig = 'tsconfig.json';
@@ -17,7 +16,6 @@ async function buildProject() {
 
   const result = await esbuild.build({
     entryPoints: [path.join('host.ts')],
-    external: federationBuilder.externals,
     outdir: outputPath,
     bundle: true,
     platform: 'browser',
