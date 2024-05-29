@@ -1,37 +1,38 @@
-const esbuild = require("esbuild");
-const demoEsBuildPlugin = require("./demo-esbuild-plugin.js");
+//@ts-nocheck
+
+const esbuild = require('esbuild');
+const path = require('path');
 const fs = require('fs');
+const {
+  moduleFederationPlugin,
+} = require('@module-federation/esbuild/esbuild-adapter');
+const { federationBuilder } = require('@module-federation/esbuild/build');
+
+async function buildProject() {
+  const tsConfig = 'tsconfig.json';
+  const outputPath = path.join('dist');
 
 
-esbuild
-  .build({
-    entryPoints: ["host.ts"],
-    external: ["@my/remote","@my/utils", 'react', 'rxjs', "./external/*"],
+  const federationConfig = require('./host.federation.config.js')
+
+  const result = await esbuild.build({
+    entryPoints: [path.join('host.ts')],
+    external: federationBuilder.externals,
+    outdir: outputPath,
     bundle: true,
-    outfile: "dist/host.js",
-    platform: "browser",
-    target: "es2020",
+    platform: 'browser',
+    format: 'esm',
+    mainFields: ['es2020', 'browser', 'module', 'main'],
+    conditions: ['es2020', 'es2015', 'module'],
+    resolveExtensions: ['.ts', '.tsx', '.mjs', '.js'],
+    tsconfig: tsConfig,
+    splitting: true,
     sourcemap: true,
     minify: false,
-    format: "esm",
-    plugins: [demoEsBuildPlugin],
     loader: { ".ts": "ts" },
+    plugins: [moduleFederationPlugin(federationConfig)],
+  });
+}
 
-    // Setting write to false gives us the possibility
-    // to manually write and perhaps transform the bundles,
-    // as in the then clause below
-    write: false
-  }).then(result => {
+buildProject().catch((err) => console.error(err));
 
-    // Manually writing files
-    if (result.outputFiles) {
-      result.outputFiles.forEach(file => {
-        fs.mkdirSync(require('path').dirname(file.path), { recursive: true });
-
-        // Add comment for demo purposes
-        fs.writeFileSync(file.path, '// Built with esbuild\n\n' + file.text);
-        console.log(`Wrote file: ${file.path}`);
-      });
-    }
-  })
-  .catch((err) => console.error(err));
