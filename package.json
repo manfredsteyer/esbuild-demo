@@ -18,7 +18,7 @@
     "rxjs": "^7.8.1"
   },
   "devDependencies": {
-    "@module-federation/esbuild": "^0.0.0-next-20240529231449",
+    "@module-federation/esbuild": "^0.0.0-next-20240530211114",
     "@module-federation/runtime": "^0.0.0-next-20240529231449",
     "@module-federation/webpack-bundler-runtime": "^0.0.0-next-20240529231449",
     "esbuild": "^0.20.2",
